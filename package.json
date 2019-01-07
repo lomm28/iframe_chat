@@ -1,0 +1,19 @@
+{
+  "name": "iframewserver",
+  "version": "1.0.0",
+  "description": "iframe chat app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/index.js"
+  },
+  "keywords": [
+    "iframe",
+    "chat"
+  ],
+  "author": "Dmytro Danko",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale = 1.0,maximum-scale = 1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<style>
+	  .fa-plus-square {
+        font-size: 3rem; 
+        float: right; 
+        cursor: pointer;
+        margin: 10px;
+    }
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <title>iFrames Chat</title>
+</head>
+<body>
+    <i class="fas fa-plus-square" onClick="addIframeWindow(); updateAvailableFrames();"></i> 
+    <script>
+      let counter = 0;
+      
+      const notifications = [];
+
+      function updateAvailableFrames(iframeId) {
+        if (document.getElementsByTagName('iframe').length) {
+          const iFramesArray = [...document.getElementsByTagName('iframe')];
+          iFramesArray.forEach((iframe, index) => {
+            notifications.forEach(notification => {
+              if(notification.id !== iframe.id && notification.count > index) {
+                const containerdiv = document.createElement('div');
+                containerdiv.setAttribute('id', `system-div-${notification.id}`);
+                containerdiv.innerHTML = notification.message;
+                if(!iframe.contentWindow.document.getElementById(`system-div-${notification.id}`)) {
+                  iframe.contentWindow.document.querySelector('.content-container').appendChild(containerdiv);
+                };
+              };
+           });
+          });
+        };
+      };
+
+      function sendMessage(inputVal, iframeId) {
+        if(!inputVal) return;
+        const iFramesArray = [...document.getElementsByTagName('iframe')];
+        iFramesArray.forEach(iframe => {
+          const containerdiv = document.createElement('div');
+          containerdiv.innerHTML = `[${iframeId}] - ${inputVal}`;
+          iframe.contentWindow.document.querySelector('.content-container').appendChild(containerdiv);
+        });
+      };
+
+      function createElementHtml(id, tagname, text){
+        const containerdiv = document.createElement('div');
+        containerdiv.setAttribute('id', `container-${id}`);
+        containerdiv.setAttribute('class', 'content-container');
+
+        const newtag = document.createElement(tagname);
+        newtag.id = id;
+        newtag.innerHTML = text;
+        containerdiv.appendChild(newtag);
+        return containerdiv;
+      };
+
+      function createForm(iframeId) {
+        const containerdiv = document.createElement('div');
+        containerdiv.setAttribute('class', 'container');
+
+        Object.assign(containerdiv.style, 
+          { width: "400px", marginTop: "5px", bottom: "0" }
+        );
+
+        const form = document.createElement('form');
+        form.setAttribute('action', '');
+
+        containerdiv.appendChild(form);
+
+        const embedSubmitField = document.createElement('div');
+        embedSubmitField.setAttribute('class', 'embed-submit-field');
+
+        Object.assign(embedSubmitField.style, 
+          { position: 'relative' }
+        );
+
+        form.appendChild(embedSubmitField);
+
+        const input = document.createElement('input');
+        input.setAttribute('type', 'text');
+        input.setAttribute('placeholder', `[${iframeId}]:`);
+        input.setAttribute('id', `input-${iframeId}`);
+
+        Object.assign(input.style, 
+          { width: '100%', padding: '15px' }
+        );
+
+        const button = document.createElement('button');
+        button.setAttribute('type', 'submit');
+        input.setAttribute('id', `button-${iframeId}`);
+        button.innerHTML = 'Send';
+
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          sendMessage(input.value, iframeId);
+          input.value=null;
+        });
+
+        Object.assign(button.style, 
+          { position: 'absolute', 
+            right: '10px', 
+            top: '7px', 
+            border: 'none', 
+            background: '#ededed', 
+            borderRadius: '3px',
+            padding: '10px',
+            cursor: 'pointer',
+            transition: 'all .2s',
+           }
+        );
+
+        embedSubmitField.appendChild(input);
+        embedSubmitField.appendChild(button);
+
+        return containerdiv;
+
+      };
+
+      function addIframeWindow() {
+        counter++;
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('id',`iframe${counter}`);
+        // iframe.setAttribute('src', 'file:///home/user/iFramesChat/index.html');
+        iframe.setAttribute('src', 'http://localhost:5000/files/index.html');
+        iframe.style.width = 450 + 'px';
+        iframe.style.margin = 10 + 'px';
+        iframe.style.height = 200 + 'px';
+
+        const systemNotification = createElementHtml(`iframe${counter}`, 'div', `[system]-iframe${counter} joined the conversation`);
+
+        document.body.appendChild(iframe);
+        notifications.push({
+          id: `iframe${counter}`, 
+          message:`[system]-iframe${counter} joined the conversation`,
+          count: counter,
+        });
+
+        const insertedIframe = document.getElementById(`iframe${counter}`).contentWindow.document.body;
+        insertedIframe.style.background='#81D8D0';
+        const form = createForm(`iframe${counter}`);
+
+        const wrapper = document.createElement('div');
+        wrapper.setAttribute('id', 'main-wrapper');
+
+        Object.assign(wrapper.style, 
+          { display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }
+        );
+
+        wrapper.appendChild(systemNotification);
+        wrapper.appendChild(form);
+
+        insertedIframe.appendChild(wrapper);
+      };
+    </script>
+</body>
+</html>
