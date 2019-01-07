@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale = 1.0,maximum-scale = 1.0, user-scalable=no" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="https://cdn.jsdelivr.net">
 	<style>
 	  .fa-plus-square {
         font-size: 3rem; 
@@ -128,8 +128,8 @@
         counter++;
         const iframe = document.createElement('iframe');
         iframe.setAttribute('id',`iframe${counter}`);
-        // iframe.setAttribute('src', 'file:///home/user/iFramesChat/index.html');
-        iframe.setAttribute('src', 'http://localhost:5000/files/index.html');
+        //iframe.setAttribute('src', 'file:///home/user/iFramesChat/index.html');
+        iframe.setAttribute('src', 'https://cdn.jsdelivr.net/gh/lomm28/iframe_chat/client/index.html');
         iframe.style.width = 450 + 'px';
         iframe.style.margin = 10 + 'px';
         iframe.style.height = 200 + 'px';
